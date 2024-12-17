@@ -70,10 +70,6 @@ This calculator is designed for working with very large numbers (up to 64 digits
 
 This project is licensed under the [MIT License](LICENSE).
 
----
 
-### Additional:
 
-- You can add a screenshot of the calculator interface (named `screenshot.png`) if you'd like.
-- Update the repository link (replace `your-username` with your actual GitHub username).
 
