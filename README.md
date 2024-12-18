@@ -60,8 +60,11 @@ This calculator is designed for working with very large numbers (up to 64 digits
 
 ## Example Interface
 
-![image](https://github.com/user-attachments/assets/07217850-55ee-40bb-8660-549d2c49a6fd)
-![image](https://github.com/user-attachments/assets/f95187ab-f87a-480b-8e21-8c55586051ac)
+![image](https://github.com/user-attachments/assets/e96c6a20-424d-4fea-9932-010a79a73c85)
+![image](https://github.com/user-attachments/assets/6352e622-fad0-4a5a-bff8-2f477c953ff6)
+
+
+
 
 
 
