@@ -34,12 +34,12 @@ This calculator is designed for working with very large numbers (up to 64 digits
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/big-number-calculator.git
+   git clone https://github.com/franklin-lol/calculate.git
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd big-number-calculator
+   cd calculate
    ```
 
 3. Install dependencies:
@@ -49,7 +49,7 @@ This calculator is designed for working with very large numbers (up to 64 digits
 
 4. Run the application:
    ```bash
-   python big_number_calculator_gui.py
+   python calculate.py
    ```
 
 ## Usage
