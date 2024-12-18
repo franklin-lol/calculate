@@ -1,4 +1,4 @@
-# Big Number Calculator with HEX/DEC Support
+# Large Number Calculator with HEX/DEC Support
 
 ## Description
 
