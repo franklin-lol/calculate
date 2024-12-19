@@ -6,46 +6,46 @@ import pyperclip  # For copying to clipboard
 # Calculator functions
 def add():
     try:
-        a = int(entry_num1.get())
-        b = int(entry_num2.get())
+        a = float(entry_num1.get())  # Use float for decimal precision
+        b = float(entry_num2.get())
         result = a + b
-        set_result(f"{result}")
+        set_result(f"{result:.6f}")  # Display result with 6 decimal places
     except ValueError:
         messagebox.showerror("Error", "Please enter valid numbers!")
 
 def subtract():
     try:
-        a = int(entry_num1.get())
-        b = int(entry_num2.get())
+        a = float(entry_num1.get())  # Use float for decimal precision
+        b = float(entry_num2.get())
         result = a - b
-        set_result(f"{result}")
+        set_result(f"{result:.6f}")  # Display result with 6 decimal places
     except ValueError:
         messagebox.showerror("Error", "Please enter valid numbers!")
 
 def multiply():
     try:
-        a = int(entry_num1.get())
-        b = int(entry_num2.get())
-        result = round(a * b, 6)
-        set_result(f"{result}")
+        a = float(entry_num1.get())  # Use float for decimal precision
+        b = float(entry_num2.get())
+        result = round(a * b, 6)  # Limit to 6 decimal places
+        set_result(f"{result:.6f}")  # Display result with 6 decimal places
     except ValueError:
         messagebox.showerror("Error", "Please enter valid numbers!")
 
 def divide():
     try:
-        a = int(entry_num1.get())
-        b = int(entry_num2.get())
+        a = float(entry_num1.get())  # Use float for decimal precision
+        b = float(entry_num2.get())
         if b == 0:
             messagebox.showerror("Error", "Division by zero is not allowed!")
         else:
-            result = round(a / b, 6)
-            set_result(f"{result}")
+            result = round(a / b, 6)  # Limit to 6 decimal places
+            set_result(f"{result:.6f}")  # Display result with 6 decimal places
     except ValueError:
         messagebox.showerror("Error", "Please enter valid numbers!")
 
 def to_hex():
     try:
-        a = int(entry_num1.get())
+        a = int(entry_num1.get())  # Convert from decimal to hex
         result = hex(a)[2:].upper()  # Convert to hex and remove '0x'
         set_result(f"{result}")
     except ValueError:
@@ -55,7 +55,7 @@ def to_dec():
     try:
         a = entry_num1.get().strip()
         result = int(a, 16)  # Convert from HEX to DEC
-        set_result(f"{result}")
+        set_result(f"{result:.6f}")  # Display result with 6 decimal places
     except ValueError:
         messagebox.showerror("Error", "Please enter a valid HEX number!")
 
@@ -68,15 +68,15 @@ def hex_operations(op):
         elif op == "-":
             result = a - b
         elif op == "*":
-            result = round(a * b, 6)
+            result = round(a * b, 6)  # Limit to 6 decimal places
         elif op == "/":
             if b == 0:
                 messagebox.showerror("Error", "Division by zero is not allowed!")
                 return
-            result = round(a / b, 6)
+            result = round(a / b, 6)  # Limit to 6 decimal places
         else:
             return
-        set_result(hex(result)[2:].upper())  # Show result as HEX without '0x'
+        set_result(f"{hex(result)[2:].upper()}")  # Show result as HEX without '0x'
     except ValueError:
         messagebox.showerror("Error", "Please enter valid HEX numbers!")
 
