@@ -33,6 +33,13 @@ class CalculatorApp:
         self.entry1 = tk.Entry(self.root, width=35, bg=self.styles["entry_bg"], fg="white", font=self.styles["font_main"], insertbackground="white")
         self.entry1.pack(pady=5)
 
+        # Кнопка SWAP (между полями)
+        self.swap_btn = tk.Button(self.root, text="⇅ Swap Numbers", command=self.swap_inputs, 
+                                  bg=self.styles["bg"], fg="#888888", font=("Arial", 9), 
+                                  bd=0, activebackground=self.styles["bg"], activeforeground="white", cursor="hand2")
+        self.swap_btn.pack(pady=0)
+        self._setup_hover(self.swap_btn, self.styles["bg"], "#444444", "#888888", "white")
+
         # Ввод Число 2
         tk.Label(self.root, text="Number 2:", bg=self.styles["bg"], fg=self.styles["fg"], font=self.styles["font_bold"]).pack(pady=5)
         self.entry2 = tk.Entry(self.root, width=35, bg=self.styles["entry_bg"], fg="white", font=self.styles["font_main"], insertbackground="white")
@@ -47,10 +54,16 @@ class CalculatorApp:
             btn = tk.Button(btn_frame, text=symbol, command=lambda o=op: self.calculate(o), 
                             bg=self.styles["btn_bg"], fg="white", font=("Arial", 14, "bold"), width=4)
             btn.grid(row=0, column=i, padx=5, pady=5)
+            self._setup_hover(btn, self.styles["btn_bg"], "#5A5A5A")
 
         # HEX Конвертация
-        tk.Button(btn_frame, text="DEC ➡ HEX", command=self.to_hex, bg="#5A5A5A", fg="white", font=self.styles["font_bold"], width=14).grid(row=1, column=0, columnspan=2, pady=5)
-        tk.Button(btn_frame, text="HEX ➡ DEC", command=self.to_dec, bg="#5A5A5A", fg="white", font=self.styles["font_bold"], width=14).grid(row=1, column=2, columnspan=2, pady=5)
+        h1 = tk.Button(btn_frame, text="DEC ➡ HEX", command=self.to_hex, bg="#5A5A5A", fg="white", font=self.styles["font_bold"], width=14)
+        h1.grid(row=1, column=0, columnspan=2, pady=5)
+        self._setup_hover(h1, "#5A5A5A", "#6A6A6A")
+
+        h2 = tk.Button(btn_frame, text="HEX ➡ DEC", command=self.to_dec, bg="#5A5A5A", fg="white", font=self.styles["font_bold"], width=14)
+        h2.grid(row=1, column=2, columnspan=2, pady=5)
+        self._setup_hover(h2, "#5A5A5A", "#6A6A6A")
         
         # HEX Арифметика
         hex_ops = [('HEX +', '+'), ('HEX -', '-'), ('HEX ×', '*'), ('HEX ÷', '//')] 
@@ -58,8 +71,9 @@ class CalculatorApp:
             btn = tk.Button(btn_frame, text=text, command=lambda o=op: self.hex_calc(o), 
                             bg="#3A4A3A", fg="white", font=("Arial", 9, "bold"), width=8)
             btn.grid(row=2, column=i, padx=2, pady=5)
+            self._setup_hover(btn, "#3A4A3A", "#4A5A4A")
 
-        # ОКОШКО РЕЗУЛЬТАТА (Светлое с серым шрифтом)
+        # ОКОШКО РЕЗУЛЬТАТА
         tk.Label(self.root, text="Result:", bg=self.styles["bg"], fg=self.styles["fg"], font=self.styles["font_bold"]).pack(pady=5)
         
         self.result_var = tk.StringVar()
@@ -71,23 +85,46 @@ class CalculatorApp:
             width=35, 
             bg=self.styles["res_bg"], 
             fg=self.styles["res_fg"], 
-            readonlybackground=self.styles["res_bg"], # Чтобы фон не менялся при readonly
+            readonlybackground=self.styles["res_bg"],
             borderwidth=2
         )
         self.result_entry.pack(pady=5)
+        self.result_entry.bind("<Button-1>", lambda e: self.copy_to_clipboard()) # Копировать по клику на поле
 
         # Кнопки управления
         ctrl_frame = tk.Frame(self.root, bg=self.styles["bg"])
         ctrl_frame.pack(pady=10)
         
-        tk.Button(ctrl_frame, text="Copy Result", command=self.copy_to_clipboard, bg="#007ACC", fg="white", font=self.styles["font_bold"], width=15).pack(side=tk.LEFT, padx=5)
-        tk.Button(ctrl_frame, text="Clear All", command=self.clear_inputs, bg="#CC3300", fg="white", font=self.styles["font_bold"], width=15).pack(side=tk.LEFT, padx=5)
-        tk.Button(self.root, text="?", command=self.show_help, bg="#555555", fg="white", font=("Arial", 10, "bold"), width=3).place(x=360, y=10)
+        c1 = tk.Button(ctrl_frame, text="Copy Result", command=self.copy_to_clipboard, bg="#007ACC", fg="white", font=self.styles["font_bold"], width=15)
+        c1.pack(side=tk.LEFT, padx=5)
+        self._setup_hover(c1, "#007ACC", "#008AE6")
+
+        c2 = tk.Button(ctrl_frame, text="Clear All", command=self.clear_inputs, bg="#CC3300", fg="white", font=self.styles["font_bold"], width=15)
+        c2.pack(side=tk.LEFT, padx=5)
+        self._setup_hover(c2, "#CC3300", "#E63900")
+
+        # Footer Help
+        help_btn = tk.Button(self.root, text="Help & About System", command=self.show_help, 
+                             bg=self.styles["bg"], fg="#666666", font=("Arial", 8, "underline"), 
+                             bd=0, activebackground=self.styles["bg"], activeforeground="white", cursor="hand2")
+        help_btn.pack(side=tk.BOTTOM, pady=5)
+        self._setup_hover(help_btn, self.styles["bg"], self.styles["bg"], "#666666", "white")
 
         # Bindings
         self.root.bind('<Return>', lambda e: self.calculate('add'))
         self.root.bind('<Escape>', lambda e: self.clear_inputs())
         self.entry1.focus_set()
+
+    def _setup_hover(self, btn, bg, hbg, fg=None, hfg=None):
+        btn.bind("<Enter>", lambda e: btn.config(bg=hbg, fg=hfg if hfg else btn['fg']))
+        btn.bind("<Leave>", lambda e: btn.config(bg=bg, fg=fg if fg else btn['fg']))
+
+    def swap_inputs(self):
+        v1, v2 = self.entry1.get(), self.entry2.get()
+        self.entry1.delete(0, tk.END)
+        self.entry1.insert(0, v2)
+        self.entry2.delete(0, tk.END)
+        self.entry2.insert(0, v1)
 
     def show_help(self):
         help_window = tk.Toplevel(self.root)
