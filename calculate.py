@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from decimal import Decimal, getcontext, InvalidOperation
+import webbrowser
 
 # Установка точности (можно увеличить до 100-1000 для гигантских чисел)
 getcontext().prec = 50 
@@ -81,11 +82,36 @@ class CalculatorApp:
         
         tk.Button(ctrl_frame, text="Copy Result", command=self.copy_to_clipboard, bg="#007ACC", fg="white", font=self.styles["font_bold"], width=15).pack(side=tk.LEFT, padx=5)
         tk.Button(ctrl_frame, text="Clear All", command=self.clear_inputs, bg="#CC3300", fg="white", font=self.styles["font_bold"], width=15).pack(side=tk.LEFT, padx=5)
+        tk.Button(self.root, text="?", command=self.show_help, bg="#555555", fg="white", font=("Arial", 10, "bold"), width=3).place(x=360, y=10)
 
         # Bindings
         self.root.bind('<Return>', lambda e: self.calculate('add'))
         self.root.bind('<Escape>', lambda e: self.clear_inputs())
         self.entry1.focus_set()
+
+    def show_help(self):
+        help_window = tk.Toplevel(self.root)
+        help_window.title("About & Help")
+        help_window.geometry("350x300")
+        help_window.configure(bg="#2E2E2E")
+        help_window.resizable(False, False)
+
+        help_text = (
+            "Large Numbers Calculator v1.1\n\n"
+            "• Supports up to 50 decimal digits\n"
+            "• HEX <-> DEC conversion & math\n"
+            "• [Enter] - Quick Add\n"
+            "• [Esc] - Clear All\n\n"
+            "Created by:"
+        )
+        
+        tk.Label(help_window, text=help_text, bg="#2E2E2E", fg="white", font=("Arial", 10), justify=tk.CENTER).pack(pady=(20, 0))
+        
+        link = tk.Label(help_window, text="franklin-sys.vercel.app", bg="#2E2E2E", fg="#00A2FF", font=("Arial", 10, "underline"), cursor="hand2")
+        link.pack()
+        link.bind("<Button-1>", lambda e: webbrowser.open_new("https://franklin-sys.vercel.app/"))
+        
+        tk.Button(help_window, text="Close", command=help_window.destroy, bg="#4A4A4A", fg="white", width=10).pack(pady=20)
 
     def get_decimals(self):
         try:
