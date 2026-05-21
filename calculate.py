@@ -82,15 +82,22 @@ class CalculatorApp:
         tk.Button(ctrl_frame, text="Copy Result", command=self.copy_to_clipboard, bg="#007ACC", fg="white", font=self.styles["font_bold"], width=15).pack(side=tk.LEFT, padx=5)
         tk.Button(ctrl_frame, text="Clear All", command=self.clear_inputs, bg="#CC3300", fg="white", font=self.styles["font_bold"], width=15).pack(side=tk.LEFT, padx=5)
 
+        # Bindings
+        self.root.bind('<Return>', lambda e: self.calculate('add'))
+        self.root.bind('<Escape>', lambda e: self.clear_inputs())
+        self.entry1.focus_set()
+
     def get_decimals(self):
         try:
             val1 = self.entry1.get().replace(',', '.').strip()
             val2 = self.entry2.get().replace(',', '.').strip()
+            if not val1 or not val2:
+                return None, None
             return Decimal(val1), Decimal(val2)
         except (InvalidOperation, ValueError):
             return None, None
 
-    def calculate(self, op):
+    def calculate(self, op='add'):
         a, b = self.get_decimals()
         if a is None:
             messagebox.showerror("Error", "Invalid numbers!")
