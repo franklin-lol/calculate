@@ -103,17 +103,28 @@ class CalculatorApp:
         c2.pack(side=tk.LEFT, padx=5)
         self._setup_hover(c2, "#CC3300", "#E63900")
 
+        # Status Label (Toast-like)
+        self.status_var = tk.StringVar()
+        self.status_label = tk.Label(self.root, textvariable=self.status_var, bg=self.styles["bg"], fg="#00FF00", font=("Arial", 9))
+        self.status_label.pack(side=tk.BOTTOM, pady=(5, 0))
+
         # Footer Help
         help_btn = tk.Button(self.root, text="Help & About System", command=self.show_help, 
                              bg=self.styles["bg"], fg="#666666", font=("Arial", 8, "underline"), 
                              bd=0, activebackground=self.styles["bg"], activeforeground="white", cursor="hand2")
-        help_btn.pack(side=tk.BOTTOM, pady=5)
+        help_btn.pack(side=tk.BOTTOM, pady=(0, 5))
         self._setup_hover(help_btn, self.styles["bg"], self.styles["bg"], "#666666", "white")
 
         # Bindings
         self.root.bind('<Return>', lambda e: self.calculate('add'))
         self.root.bind('<Escape>', lambda e: self.clear_inputs())
         self.entry1.focus_set()
+
+    def show_status(self, msg, is_error=False):
+        self.status_var.set(msg)
+        self.status_label.config(fg="#FF4444" if is_error else "#00FF00")
+        # Скрыть через 3 секунды
+        self.root.after(3000, lambda: self.status_var.set(""))
 
     def _setup_hover(self, btn, bg, hbg, fg=None, hfg=None):
         btn.bind("<Enter>", lambda e: btn.config(bg=hbg, fg=hfg if hfg else btn['fg']))
@@ -163,7 +174,7 @@ class CalculatorApp:
     def calculate(self, op='add'):
         a, b = self.get_decimals()
         if a is None:
-            messagebox.showerror("Error", "Invalid numbers!")
+            self.show_status("Invalid numbers!", True)
             return
         try:
             if op == 'add': res = a + b
@@ -171,12 +182,12 @@ class CalculatorApp:
             elif op == 'mul': res = a * b
             elif op == 'div':
                 if b == 0:
-                    messagebox.showerror("Error", "Division by zero!")
+                    self.show_status("Division by zero!", True)
                     return
                 res = a / b
             self.result_var.set(f"{res.normalize():f}") 
         except Exception as e:
-            messagebox.showerror("Error", f"Calc error: {e}")
+            self.show_status(f"Calc error: {e}", True)
 
     def hex_calc(self, op):
         try:
@@ -187,31 +198,35 @@ class CalculatorApp:
             elif op == '*': res = a * b
             elif op == '//':
                 if b == 0:
-                    messagebox.showerror("Error", "Division by zero!")
+                    self.show_status("Division by zero!", True)
                     return
                 res = a // b
             self.result_var.set(hex(res)[2:].upper())
         except ValueError:
-            messagebox.showerror("Error", "Invalid HEX input!")
+            self.show_status("Invalid HEX input!", True)
 
     def to_hex(self):
         try:
             val = int(Decimal(self.entry1.get().replace(',', '.').strip()))
             self.result_var.set(hex(val)[2:].upper())
         except:
-             messagebox.showerror("Error", "Invalid integer for HEX")
+             self.show_status("Invalid integer for HEX", True)
 
     def to_dec(self):
         try:
             val = int(self.entry1.get().strip(), 16)
             self.result_var.set(str(val))
         except:
-            messagebox.showerror("Error", "Invalid HEX string")
+            self.show_status("Invalid HEX string", True)
 
     def copy_to_clipboard(self):
-        self.root.clipboard_clear()
-        self.root.clipboard_append(self.result_var.get())
-        messagebox.showinfo("Copied", "Result in clipboard!")
+        res = self.result_var.get()
+        if res:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(res)
+            self.show_status("Result copied to clipboard!")
+        else:
+            self.show_status("Nothing to copy", True)
 
     def clear_inputs(self):
         self.entry1.delete(0, tk.END)
